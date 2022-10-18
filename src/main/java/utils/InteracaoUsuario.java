@@ -20,15 +20,17 @@ public class InteracaoUsuario {
 			if(capacidadelocacao.equals("1")) {
 				QuartoUnico novoQuarto = new QuartoUnico(nomeacomodacao);
 				registro.adicionarAcomodacao(novoQuarto);
+				utils.write("Acomodação criada com sucesso!");
 			}
-			if(capacidadelocacao.equals("2")) {
+			else if(capacidadelocacao.equals("2")) {
 				QuartoDuplo novoQuarto = new QuartoDuplo(nomeacomodacao);
 				registro.adicionarAcomodacao(novoQuarto);
+				utils.write("Acomodação criada com sucesso!");
 			}
-			
 			else {
 				utils.write("Invalido");
 			}
+			
 		}
 		if(tipoacomodacao.equals("2")) {
 			utils.write("Apartamento possui dois tipos de capacidade locacao 1(duplo) ou 2(triplo), qual seria?");
@@ -36,10 +38,12 @@ public class InteracaoUsuario {
 			if(capacidadelocacao.equals("1")) {
 				ApartamentoDuplo novoApartamento = new ApartamentoDuplo(nomeacomodacao);
 				registro.adicionarAcomodacao(novoApartamento);
+				utils.write("Acomodação criada com sucesso!");
 			}
-			if(capacidadelocacao.equals("2")) {
+			else if(capacidadelocacao.equals("2")) {
 				ApartamentoTriplo novoApartamento = new ApartamentoTriplo(nomeacomodacao);
 				registro.adicionarAcomodacao(novoApartamento);
+				utils.write("Acomodação criada com sucesso!");
 			}
 			
 			else {
@@ -52,7 +56,10 @@ public class InteracaoUsuario {
 			String capacidadelocacao = utils.read();
 			Chale novoChale = new Chale(nomeacomodacao,Integer.valueOf(capacidadelocacao));
 			registro.adicionarAcomodacao(novoChale);
+			utils.write("Acomodação criada com sucesso!");
 		}
+		
+	
 	}
 	
 	private void cadastrarReserva(Registros registro, Utils utils) {
@@ -97,7 +104,7 @@ public class InteracaoUsuario {
 				
 				utils.write("Digite o nome da alocaçao a ser reservada: ");
 				nomeAcomodacao = utils.read();
-				acomodacao = registro.buscaPorNome(nomeAcomodacao);
+				acomodacao = registro.buscaPorNomeAcomodacao(nomeAcomodacao);
 				
 				if(acomodacao == null) {
 					utils.write("Não foi localizado a acomodação informada.");
@@ -167,7 +174,6 @@ public class InteracaoUsuario {
 				}
 				else {
 					Checkout checkout = new Checkout(reserva);
-					
 					utils.write("CheckOut criado!");
 					utils.write("Informações da reserva:");
 					utils.write("Reserva numero: " + checkout.getReserva().getIdentificador());
@@ -179,6 +185,7 @@ public class InteracaoUsuario {
 					utils.write("Quantidade de hospedes: "+checkout.getReserva().getQuantidadePessoas());
 					utils.write("Quantidade de produtos consumidos: "+checkout.getReserva().getProdutosConsumidos().size());
 					utils.write("Valor total: "+checkout.getValorTotal());
+					registro.excluirReserva(reserva);
 				}		
 			}
 			else{
@@ -189,59 +196,96 @@ public class InteracaoUsuario {
 	}
 
 	private void areaVendas(Registros registro, Utils utils) {
-		String inputUser = "0";
+		String inputUser;
 		while(true) {	
-			if(inputUser != "sair") {
 			utils.write("Bem vindo a area de vendas, selecione a opção:");
 			utils.write("Cadastrar um novo produto -(1)");
 			utils.write("Realizar uma venda -(2)");
-			 inputUser = utils.read();
-			if(inputUser.equals("1")) {
-				utils.write("Nome do produto:");
-				String produtoNome = utils.read();
-				utils.write("Valor do produto:");
-				String produtoValor = utils.read();
-				utils.write("Possui alcool?(true/false)");
-				String produtoalcolico = utils.read();
-				Produto produtonovo = new Produto(produtoNome,Boolean.valueOf(produtoalcolico),Double.valueOf(produtoValor));
-				registro.adicionarProduto(produtonovo);
-				utils.write("Produto "+produtonovo.getNome()+" cadastrado com sucesso!");
-			}
-			if(inputUser.equals("2")) {
-				Produto produto ;
-				Reserva reserva;
-				utils.write("Selecione o produto informando seu nome:");
-				registro.listarProdutos();
-				String produtoinput = utils.read();
-				produto = registro.buscaPorProduto(produtoinput);
-				if(produto.equals(null)) {
-					utils.write("Produto invalida, por favor digite novamente o nome do produto");
+			utils.write("Para voltar ao menu principal digite sair");
+			inputUser = utils.read();
+			
+			if(!(inputUser.equals("sair"))) {
+				if(inputUser.equals("1")) {
+					utils.write("Nome do produto:");
+					String produtoNome = utils.read();
+					utils.write("Valor do produto:");
+					String produtoValor = utils.read();
+					utils.write("Possui alcool?(true/false)");
+					String produtoalcolico = utils.read();
+					Produto produtonovo = new Produto(produtoNome,Boolean.valueOf(produtoalcolico),Double.valueOf(produtoValor));
+					registro.adicionarProduto(produtonovo);
+					utils.write("Produto "+produtonovo.getNome()+" cadastrado com sucesso!");
 				}
-				utils.write("Selecione a reserva que deseja realizar a compra");
-				registro.listarReservas();
-				String reservainput = utils.read();
-				reserva = registro.buscaPorReserva(reservainput);
-				if(reserva.equals(null)) {
-					utils.write("Reserva invalida, por favor digite novamente o identificador da reserva");
-				}
-				utils.write("Idade do hospede:");
-				String idade = utils.read();
-				try {
-					Venda novaVenda = new Venda(produto,Integer.valueOf(idade),reserva);
-					reserva.addProdutoconsumido(novaVenda);
-				}
-				catch(Exception err) {
-					utils.write(String.valueOf(err));
+				if(inputUser.equals("2")) {
+					try {
+						Produto produto;
+						Reserva reserva;
+						int idade = 0;
+						String nome ;
+						
+						utils.write("Caso deseje voltar ao menur anterior digite sair");
+						utils.write("Selecione o produto informando seu nome:");
+						
+						registro.listarProdutos();
+						String produtoinput = utils.read();
+						produto = registro.buscaPorProduto(produtoinput);
+						
+						if(produto == null) {
+							throw new Exception("Produto invalido, por favor digite novamente o nome do produto");
+						}
+						
+											
+						utils.write("Informe qual é o numero da reserva do hospede:");
+						utils.write("Numero das reservas:");
+						
+						registro.listarReservas();
+						String reservainput = utils.read();
+						reserva = registro.buscaPorReserva(String.valueOf(reservainput));
+						
+						if(reserva == null) {
+							throw new Exception("Reserva invalida, por favor digite novamente o identificador da reserva");
+						}
+						
+						if(reserva.getQuantidadePessoas()>1){
+							utils.write("Qual nome do hospede?");
+							nome = utils.read();
+							idade = registro.buscaIdadePorNomeHospede(reserva,nome);
+						}
+						
+						else {
+							idade = reserva.getHospedes().get(0).getIdade();
+						}
+						
+						if(idade == 0) {
+							throw new Exception("Nome invalido, informe novamente");
+						}
+						
+						try {
+							Venda novaVenda = new Venda(produto,idade,reserva);
+							reserva.addProdutoconsumido(novaVenda);
+							utils.write("Venda concluida com sucesso!");
+						}
+						catch(Exception err) {
+							throw new Exception(err);
+						}
+					}
+					
+					catch(Exception error) {
+						utils.write(error.getMessage());
+					}
+					
 				}
 				
+				else {
+					utils.write("Opção Inválida");
 				}
-			
-				if(inputUser.equals("sair")) {
-					break;
-				}
-			
 			}
+			else {
+				break;
+			}
+			
 		}
+		
 	}
 	
 	
@@ -261,7 +305,4 @@ public class InteracaoUsuario {
 			realizarCheckout(registro, utils);
 		}
 	}
-
-	
-	
 }

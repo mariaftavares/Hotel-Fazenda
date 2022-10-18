@@ -10,7 +10,7 @@ public class Main {
 	private static Registros registro = new Registros(); 
 
 	
-	public static void main(String[] args) {
+	public static void main(String[] args) throws Exception {
 			String entradaUsuario;
 
 			while(true) {
@@ -32,7 +32,8 @@ public class Main {
 						interacao.executarOpcao(entradaUsuario, registro, utils);
 						
 					} catch (Exception e) {
-						utils.write(String.format("Erro: ", e.getMessage() != null ? e.getMessage() : "Não foi possível executar opção. Por favor selecione novamente."));
+//						utils.write(String.format("Erro: ", e.getMessage() != null ? e.getMessage() : "Não foi possível executar opção. Por favor selecione novamente."));
+						throw e;
 					}
 				}
 			}

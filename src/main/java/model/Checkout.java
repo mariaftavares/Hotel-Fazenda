@@ -13,11 +13,14 @@ public class Checkout {
 		this.reserva = reserva;
 		for(int index = 0; index < this.reserva.getAcomodacoes().size(); index++) {
 			this.valorDiariaTotal += this.reserva.getAcomodacoes().get(index).getValorLocacao();
-			this.reserva.getAcomodacoes().get(index).getReservado().equals(false);
 			this.valorTotal = this.valorDiariaTotal * this.reserva.getQuantidadedias();
 		}
 		for(int i = 0; i < this.reserva.getProdutosConsumidos().size();i++) {
 			this.valorTotal += this.reserva.getProdutosConsumidos().get(i).getProduto().getValor();
+		}
+		
+		for(int z = 0; z < this.reserva.getAcomodacoes().size();z++) {
+			this.reserva.getAcomodacoes().get(z).setReservado(false);;
 		}
 	}
 	

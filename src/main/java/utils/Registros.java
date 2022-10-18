@@ -14,20 +14,33 @@ public class Registros {
 
 
 	public Registros() {
+		//Inserindo dados inciais 
 		QuartoUnico quartoUnico = new QuartoUnico("Arara-azul");
 		QuartoDuplo quartoduplo = new QuartoDuplo("Onça-pintada");
 		Chale chale = new Chale("Capivara", 3);
-		
+		ApartamentoDuplo apartamentoduplo = new ApartamentoDuplo("Lontra");
+		ApartamentoTriplo apartamentotriplo = new ApartamentoTriplo("Sucuri");
+		Produto produto1 = new Produto("Suco de laranja",false,5.00);
+		Produto produto2 = new Produto("Cerveja",true,7.00);
+		Produto produto3 = new Produto("Refrigerante",false,4.00);
+		Produto produto4 = new Produto("Pinga",true,3.00);
 		acomodacoes.add(quartoUnico);
 		acomodacoes.add(quartoduplo);
 		acomodacoes.add(chale);
+		acomodacoes.add(apartamentoduplo);
+		acomodacoes.add(apartamentotriplo);
+		produtos.add(produto1);
+		produtos.add(produto2);
+		produtos.add(produto3);
+		produtos.add(produto4);
+		
 	}
 	
 	public List<Acomodacao> getAcomodacoes() {
 		return acomodacoes;
 	}
 
-	public Acomodacao buscaPorNome(String nome) {
+	public Acomodacao buscaPorNomeAcomodacao(String nome) {
 		Acomodacao acomodacao = null;
 		for(int i = 0; i < this.acomodacoes.size(); i++) {
 			if(this.acomodacoes.get(i).getNomeLocacao().equals(nome)) {
@@ -49,7 +62,11 @@ public class Registros {
 	
 	public void listarReservas() {
 		for(int i = 0; i < this.reservas.size(); i++) {
-			System.out.println("Numero da reserva: " + this.reservas.get(i).getIdentificador());				
+			System.out.println("n°: "+this.reservas.get(i).getIdentificador());
+			System.out.println("Nome dos Hospedes da reserva n°"+this.reservas.get(i).getIdentificador());
+			for(int a=0; a<this.reservas.get(i).getHospedes().size();a++) {
+				System.out.println(this.reservas.get(i).getHospedes().get(a).getNome());
+			}
 		}
 	}
 	
@@ -81,6 +98,17 @@ public class Registros {
 		
 		return produto;
 	}
+	public Integer buscaIdadePorNomeHospede(Reserva reserva,String nome) {
+		int idade = 0;
+		for(int i = 0;i<reserva.getHospedes().size();i++) {
+			if(reserva.getHospedes().get(i).getNome().equals(nome)) {
+				idade = reserva.getHospedes().get(i).getIdade();
+			}
+		}
+		
+		return idade;
+		
+	}
 	
 	public void setAcomodacoes(List<Acomodacao> acomodacoes) {
 		this.acomodacoes = acomodacoes;
@@ -97,6 +125,9 @@ public class Registros {
 		this.produtos.add(produto);
 	}
 	
+	public void excluirReserva(Reserva reserva) {
+		this.reservas.remove(reserva);
+	}
 	public List<Reserva> getReservas() {
 		return reservas;
 	}
